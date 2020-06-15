@@ -109,6 +109,11 @@ RUN rm -rf /tmp/nginx-${NGINX_VERSION}
 RUN cp /opt/osp/setup/nginx/*.conf /usr/local/nginx/conf/
 RUN cp /opt/osp/setup/nginx/mime.types /usr/local/nginx/conf/
 
+# Send NGINX logs to stdout
+RUN mkdir -p /usr/local/nginx/logs
+RUN ln -sf /dev/stdout /usr/local/nginx/logs/access.log
+RUN ln -sf /dev/stderr /usr/local/nginx/logs/error.log
+
 # Install Python, Gunicorn, and uWSGI
 RUN apk add python3 \
   py3-pip \
