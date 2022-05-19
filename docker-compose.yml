@@ -8,7 +8,7 @@ networks:
 
 services:
   osp_ejabberd:
-    build: ./Ejabberd
+    build: ./osp-ejabberd
     restart: unless-stopped
 
     mem_limit: 256m
@@ -41,7 +41,7 @@ services:
       - web
 
   osp_core:
-    build: ./OSP-Core
+    build: ./osp-core
     restart: unless-stopped
 
     mem_limit: 2048m
@@ -59,17 +59,17 @@ services:
       - '8088:80'
     environment:
       - OSP_SERVER_ADDRESS=osp.example.com
-      - REDIS_HOST=osp_redis
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=
-      - DB_URL=mysql+pymysql://osp:REPLACEOSPDBPASSWORD@osp_db/osp
-      - FLASK_SECRET=REPLACEME_osp_flask_secret_REPLACEME
-      - FLASK_SALT=REPLACEME_osp_flask_salt_REPLACEME
-      - OSP_ALLOWREGISTRATION=True
-      - OSP_REQUIREVERIFICATION=False
-      - EJABBERDPASS=changeme
-      - EJABBERDSERVER=osp_ejabberd
-      - EJABBERDHTTPBINDFQDN=ejabberd.example.com
+      - OSP_REDIS_HOST=osp_redis
+      - OSP_REDIS_PORT=6379
+      - OSP_REDIS_PASSWORD=
+      - OSP_CORE_DB=mysql+pymysql://osp:REPLACEOSPDBPASSWORD@osp_db/osp
+      - OSP_CORE_SECRETKEY=REPLACEME_osp_flask_secret_REPLACEME
+      - OSP_CORE_PASSWORD_SALT=REPLACEME_osp_flask_salt_REPLACEME
+      - OSP_CORE_ALLOWREGISTRATION=True
+      - OSP_CORE_REQUIREEMAILREGISTRATION=False
+      - OSP_EJABBERD_PASSWORD=changeme
+      - OSP_EJABBERD_RPCHOST=osp_ejabberd
+      - OSP_EJABBERD_BOSHDOMAIN=ejabberd.example.com
       # - TZ=ETC/UTC
     volumes:
       - "/srv/docker/osp-app/data/www:/var/www"
@@ -86,7 +86,7 @@ services:
     entrypoint: ["/opt/osp/setup/wait-for-it.sh", "osp_db:3306", "-t", "60", "--", "/opt/osp/docker-files.d/entrypoint.sh"]
 
   osp_rtmp:
-    build: ./OSP-RTMP
+    build: ./osp-rtmp
     restart: unless-stopped
     mem_limit: 2048m
     memswap_limit: 2304m
@@ -95,8 +95,8 @@ services:
     ports:
       - '1935:1935'
     environment:
-      - OSPCOREAPI=http://osp.example.com
-      - FLASK_SECRET=changeme
+      - OSP_API_HOST=http://osp.example.com
+      - OSP_RTMP_SECRETKEY=changeme
     volumes:
       - "/srv/docker/osp-app/data/www:/var/www"
       - "/srv/docker/osp-app/data/tmpfs/live:/var/www/live"
