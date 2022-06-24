@@ -26,7 +26,7 @@ echo 'Setting up OSP Configuration'
 echo 'Performing DB Migrations'
 cd /opt/osp
 
-python3 flask db upgrade
+python3 manage.py db upgrade
 cd /
 
 echo 'Fixing OSP Permissions Post Migration'
