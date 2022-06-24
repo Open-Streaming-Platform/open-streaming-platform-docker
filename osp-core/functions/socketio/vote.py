@@ -26,11 +26,7 @@ def handle_upvote_total_request(streamData):
     if vidType == "stream":
         loc = str(loc)
         channelQuery = cachedDbCalls.getChannelByLoc(loc)
-        streamQuery = (
-            Stream.Stream.query.filter_by(linkedChannel=channelQuery.id)
-            .with_entities(Stream.Stream.id)
-            .first()
-        )
+        streamQuery = Stream.Stream.query.filter_by(linkedChannel=channelQuery.id).with_entities(Stream.Stream.id).first()
         if streamQuery != None:
             totalQuery = upvotes.streamUpvotes.query.filter_by(
                 streamID=streamQuery.id
