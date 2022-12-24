@@ -686,6 +686,7 @@ from blueprints.clip import clip_bp
 from blueprints.upload import upload_bp
 from blueprints.settings import settings_bp
 from blueprints.oauth import oauth_bp
+from blueprints.m3u8 import m3u8_bp
 
 # Register all Blueprints
 app.register_blueprint(errorhandler_bp)
@@ -701,6 +702,7 @@ app.register_blueprint(upload_bp)
 app.register_blueprint(settings_bp)
 app.register_blueprint(liveview_bp)
 app.register_blueprint(oauth_bp)
+app.register_blueprint(m3u8_bp)
 
 app.logger.info({"level": "info", "message": "Initializing Template Filters"})
 # ----------------------------------------------------------------------------#
