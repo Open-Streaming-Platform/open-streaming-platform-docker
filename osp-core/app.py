@@ -153,6 +153,9 @@ if hasattr(config, "sentryIO_Enabled") and hasattr(config, "sentryIO_DSN"):
             release=globalvars.version,
             environment=sentryEnv,
             server_name=globalvars.processUUID,
+            _experiments={
+                "profiles_sample_rate": 1.0,
+            }
         )
 
 coreNginxRTMPAddress = "127.0.0.1"
@@ -480,14 +483,14 @@ except Exception as e:
     )
 
 # Loop Check if OSP DB Init is Currently Being Handled by and Process
-OSP_DB_INIT_HANDLER = None
-while OSP_DB_INIT_HANDLER != globalvars.processUUID:
-    OSP_DB_INIT_HANDLER = r.get("OSP_DB_INIT_HANDLER")
-    if OSP_DB_INIT_HANDLER != None:
-        OSP_DB_INIT_HANDLER = OSP_DB_INIT_HANDLER.decode("utf-8")
-    else:
-        r.set("OSP_DB_INIT_HANDLER", globalvars.processUUID)
-        time.sleep(random.random())
+#OSP_DB_INIT_HANDLER = None
+#while OSP_DB_INIT_HANDLER != globalvars.processUUID:
+#    OSP_DB_INIT_HANDLER = r.get("OSP_DB_INIT_HANDLER")
+#    if OSP_DB_INIT_HANDLER != None:
+#        OSP_DB_INIT_HANDLER = OSP_DB_INIT_HANDLER.decode("utf-8")
+#    else:
+#        r.set("OSP_DB_INIT_HANDLER", globalvars.processUUID)
+#        time.sleep(random.random())
 
 # Once Attempt Database Load and Validation
 app.logger.info(
