@@ -1063,16 +1063,24 @@ def getUserByUsernameDict(username):
     UserQuery = Sec.User.query.filter_by(username=username).with_entities(Sec.User.id, Sec.User.uuid, Sec.User.username, Sec.User.biography, Sec.User.pictureLocation).first()
     if UserQuery is not None:
         OwnedChannels = getChannelsByOwnerId(UserQuery.id)
+        channelsReturn = []
+        for channel in OwnedChannels:
+            channelsReturn.append(channel.channelLoc)
         returnData = {
             "id": str(UserQuery.id),
             "uuid": UserQuery.uuid,
             "username": UserQuery.username,
             "biography": UserQuery.biography,
             "pictureLocation": "/images/" + str(UserQuery.pictureLocation),
-            "channels": OwnedChannels,
+            "channels": channelsReturn,
             "page": "/profile/" + str(UserQuery.username) + "/"
         }
     return returnData
+
+@cache.memoize(timeout=60)
+def getUsers():
+    UserQuery = Sec.User.query.filter_by(active=True).with_entities(Sec.User.id, Sec.User.username, Sec.User.uuid).all()
+    return UserQuery
 
 @cache.memoize(timeout=120)
 def searchUsers(term):
