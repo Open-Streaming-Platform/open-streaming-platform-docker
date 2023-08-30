@@ -157,6 +157,7 @@ steps:
     event:
       - push
       - custom
+      
 - name: build-ejabberd
   image: thegeeklab/drone-docker-buildx
   privileged: true
