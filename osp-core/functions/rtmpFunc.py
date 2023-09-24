@@ -148,26 +148,23 @@ def rtmp_stage2_user_auth_check(channelLoc, ipaddress, authorizedRTMP):
 
     currentTime = datetime.datetime.utcnow()
 
-    # requestedChannel = Channel.Channel.query.filter_by(channelLoc=channelLoc).first()
     requestedChannel = cachedDbCalls.getChannelByLoc(channelLoc)
 
     if requestedChannel is not None:
         authedStream = Stream.Stream.query.filter_by(
             pending=True, streamKey=requestedChannel.streamKey
-        ).first()
+        ).with_entities(Stream.Stream.id, Stream.Stream.streamName, Stream.Stream.topic).first()
 
         if authedStream is not None:
-            if authorizedRTMP is not None:
-                authedStream.rtmpServer = authorizedRTMP
 
-            authedStream.currentViewers = int(
+            currentViewers = int(
                 xmpp.getChannelCounts(requestedChannel.channelLoc)
             )
-            authedStream.totalViewers = int(
+            totalViewers = int(
                 xmpp.getChannelCounts(requestedChannel.channelLoc)
             )
-            authedStream.active = True
-            authedStream.pending = False
+
+            authedStreamUpdate = Stream.Stream.query.filter_by(id=authedStream.id).update(dict(currentViewers=currentViewers, totalViewers=totalViewers, active=True, pending=False, rtmpServer=authorizedRTMP))
             db.session.commit()
 
             if requestedChannel.imageLocation is None:
@@ -573,7 +570,7 @@ def rtmp_user_deauth_check(key, ipaddress):
             return returnMessage
 
 
-@celery.task(bind=True, max_retries=20)
+@celery.task(bind=True, max_retries=100)
 def rtmp_rec_Complete_handler(self, channelLoc, path, pendingVideoID=None):
     try:
         sysSettings = cachedDbCalls.getSystemSettings()
@@ -618,6 +615,7 @@ def rtmp_rec_Complete_handler(self, channelLoc, path, pendingVideoID=None):
             channelTuple = (requestedChannel.id, requestedChannel.channelLoc)
             db.session.commit()
 
+            # TODO Not Working?
             notifications.userNotification(f"{pendingVideo.channelName} has started processing.", f"/play/{pendingVideo.id}", f"/images/{templateFilters.get_pictureLocation(requestedChannel.owningUser)}", requestedChannel.owningUser)
 
             results = videoFunc.processStreamVideo(fileName, channelTuple[1])
