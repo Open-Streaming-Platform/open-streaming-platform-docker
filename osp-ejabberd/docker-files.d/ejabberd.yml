@@ -55,11 +55,10 @@ listen:
     max_stanza_size: 524288
   -
     port: 5443
-    ip: "::FFFF:127.0.0.1"
+    ip: "::"
     module: ejabberd_http
     tls: true
     request_handlers:
-      /admin: ejabberd_web_admin
       /api: mod_http_api
       /bosh: mod_bosh
       /captcha: ejabberd_captcha
@@ -67,10 +66,9 @@ listen:
       /ws: ejabberd_http_ws
   -
     port: 5280
-    ip: "::FFFF:127.0.0.1"
+    ip: "::"
     module: ejabberd_http
     request_handlers:
-      /admin: ejabberd_web_admin
       /api: mod_http_api
       /bosh: mod_bosh
       /captcha: ejabberd_captcha
