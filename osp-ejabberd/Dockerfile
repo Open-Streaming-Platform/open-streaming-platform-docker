@@ -30,7 +30,6 @@ ENV OSP_API_DOMAIN=$DEFAULT_OSP_API_DOMAIN
 
 USER root
 RUN apk add --update python3 py3-pip
-RUN pip3 install --upgrade pip
 RUN pip install requests
 RUN apk add --no-cache bash
 
