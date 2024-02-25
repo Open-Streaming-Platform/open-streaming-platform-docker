@@ -30,7 +30,7 @@ ENV OSP_API_DOMAIN=$DEFAULT_OSP_API_DOMAIN
 
 USER root
 RUN apk add --update python3 py3-pip
-RUN pip install requests
+RUN pip install requests --break-system-packages
 RUN apk add --no-cache bash
 
 COPY docker-files.d/entrypoint.sh /run/entrypoint.sh
