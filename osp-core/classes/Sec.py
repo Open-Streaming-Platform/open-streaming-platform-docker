@@ -113,7 +113,6 @@ class Role(db.Model, RoleMixin):
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
     permissions = db.Column(MutableList.as_mutable(AsaList()), nullable=True)
-    allowedStorage = db.Column
     default = db.Column(db.Boolean)
 
 

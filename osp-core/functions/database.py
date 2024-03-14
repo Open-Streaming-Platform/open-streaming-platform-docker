@@ -41,31 +41,6 @@ def checkDefaults(user_datastore):
         name="Uploader", description="Uploader", default=False
     )
 
-    user_datastore.add_permissions_to_role('Admin', ['admin'])
-    user_datastore.add_permissions_to_role('Streamer', ['user.create.channel', 'channel.create.livestream'])
-    user_datastore.add_permissions_to_role('Recorder', ['user.create.channel', 'channel.create.video', 'channel.create.clip'])
-    user_datastore.add_permissions_to_role('Uploader', ['user.create.video', 'channel.create.upload'])
-    
-    """
-        Future Permissions Set
-        admin
-        user.subscribe
-        user.chat
-        user.create.api
-        user.create.message
-        user.create.channel
-        channel.create.livestream
-        channel.create.video
-        channel.create.clip
-        channel.create.upload
-        channel.set.restream
-        channel.set.protection
-        channel.set.layout
-        channel.set.webhook
-        channel.set.hub.hub
-    """
-
-
     log.info({"level": "info", "message": "Setting Default Topics"})
     topicList = [("Other", "None")]
     if topics.topics.query.all() == []:
